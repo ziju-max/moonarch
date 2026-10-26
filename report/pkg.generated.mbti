@@ -13,6 +13,8 @@ pub fn render_markdown(Report) -> String
 
 pub fn render_terminal(Report) -> String
 
+pub fn sanitize_terminal_text(String) -> String
+
 // Errors
 
 // Types and methods

@@ -120,7 +120,7 @@ fn path_nodes(path : Array[@graph.Edge]) -> String {
 
 ///|
 fn markdown_code_span(value : String) -> String {
-  let safe = flatten_report_controls(value)
+  let safe = sanitize_terminal_text(value)
   let mut longest_run = 0
   let mut current_run = 0
   for character in safe.to_array() {
@@ -139,7 +139,7 @@ fn markdown_code_span(value : String) -> String {
 
 ///|
 fn markdown_text(value : String) -> String {
-  let safe = flatten_report_controls(value)
+  let safe = sanitize_terminal_text(value)
   let pieces = safe
     .to_array()
     .map(character => {

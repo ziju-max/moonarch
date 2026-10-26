@@ -3,8 +3,8 @@ pub fn render_terminal(report : Report) -> String {
   let status = if report.has_new_failures() { "FAIL" } else { "PASS" }
   let output = StringBuilder()
   output.write_string("MoonArch " + status + "\n")
-  output.write_string("Input: " + flatten_report_controls(report.input) + "\n")
-  output.write_string("Date: " + flatten_report_controls(report.today) + "\n")
+  output.write_string("Input: " + sanitize_terminal_text(report.input) + "\n")
+  output.write_string("Date: " + sanitize_terminal_text(report.today) + "\n")
   output.write_string(
     "Counts: new: " + report.new_findings.length().to_string(),
   )
@@ -27,13 +27,13 @@ pub fn render_terminal(report : Report) -> String {
   for value in report.suppressed {
     output.write_string(
       "SUPPRESSED " +
-      flatten_report_controls(value.violation.rule_id) +
+      sanitize_terminal_text(value.violation.rule_id) +
       ": " +
-      flatten_report_controls(value.reason) +
+      sanitize_terminal_text(value.reason) +
       " (owner=" +
-      flatten_report_controls(value.owner) +
+      sanitize_terminal_text(value.owner) +
       ", expires=" +
-      flatten_report_controls(value.expires) +
+      sanitize_terminal_text(value.expires) +
       ")\n",
     )
     write_path(output, value.violation.path)
@@ -46,13 +46,13 @@ pub fn render_terminal(report : Report) -> String {
     output.write_string(
       kind +
       " " +
-      flatten_report_controls(notice.rule_id) +
+      sanitize_terminal_text(notice.rule_id) +
       " " +
-      flatten_report_controls(notice.source) +
+      sanitize_terminal_text(notice.source) +
       " -> " +
-      flatten_report_controls(notice.target) +
+      sanitize_terminal_text(notice.target) +
       ": " +
-      flatten_report_controls(notice.message) +
+      sanitize_terminal_text(notice.message) +
       "\n",
     )
   }
@@ -68,13 +68,13 @@ fn write_terminal_finding(
   output.write_string(
     status +
     " " +
-    flatten_report_controls(finding.rule_id) +
+    sanitize_terminal_text(finding.rule_id) +
     " [" +
-    flatten_report_controls(finding.context.as_string()) +
+    sanitize_terminal_text(finding.context.as_string()) +
     "]: " +
-    flatten_report_controls(finding.source) +
+    sanitize_terminal_text(finding.source) +
     " -> " +
-    flatten_report_controls(finding.target) +
+    sanitize_terminal_text(finding.target) +
     "\n",
   )
   write_path(output, finding.path)
@@ -84,11 +84,11 @@ fn write_terminal_finding(
 fn write_path(output : StringBuilder, path : Array[@graph.Edge]) -> Unit {
   if !path.is_empty() {
     let steps = path.map(edge => {
-      flatten_report_controls(edge.source()) +
+      sanitize_terminal_text(edge.source()) +
       " -> " +
-      flatten_report_controls(edge.target()) +
+      sanitize_terminal_text(edge.target()) +
       " (" +
-      flatten_report_controls(edge.kind().as_string()) +
+      sanitize_terminal_text(edge.kind().as_string()) +
       ")"
     })
     output.write_string("  witness: " + steps.join("; ") + "\n")

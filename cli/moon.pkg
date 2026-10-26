@@ -1,4 +1,5 @@
 import {
   "moonbitlang/async/stdio",
   "ziju-max/moonarch/application",
+  "ziju-max/moonarch/report",
 }

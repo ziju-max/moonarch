@@ -34,6 +34,25 @@ try {
     throw "expected stdout write failure to return 3, got $stdoutFailureCode; stderr: $processError"
   }
 
+  $controlConfig = Join-Path $root '_build/control-config.json'
+  [System.IO.File]::WriteAllText(
+    $controlConfig,
+    '{"schema_version":1,"scope":{"include":["demo/**"]},"groups":[],"rules":[],"evil\nInjected":true}'
+  )
+  $processInfo.Arguments = 'config validate --config _build/control-config.json'
+  $process = [System.Diagnostics.Process]::new()
+  $process.StartInfo = $processInfo
+  [void]$process.Start()
+  $stdoutText = $process.StandardOutput.ReadToEnd()
+  $stderrText = $process.StandardError.ReadToEnd()
+  $process.WaitForExit()
+  $controlOutputCode = $process.ExitCode
+  $process.Dispose()
+  $stderrLines = $stderrText.TrimEnd() -split '\r?\n'
+  if ($controlOutputCode -ne 2 -or $stderrLines.Count -ne 1) {
+    throw "expected one sanitized configuration error line and exit 2, got exit $controlOutputCode and $($stderrLines.Count) stderr lines: $stderrText"
+  }
+
   moon run cmd/main --target native -- config validate --config examples/offline/moonarch.json
   if ($LASTEXITCODE -ne 0) { throw 'offline configuration validation failed' }
 

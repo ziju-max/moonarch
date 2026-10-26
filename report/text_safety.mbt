@@ -1,5 +1,5 @@
 ///|
-fn flatten_report_controls(value : String) -> String {
+pub fn sanitize_terminal_text(value : String) -> String {
   let pieces = value
     .to_array()
     .map(character => {

@@ -3,7 +3,11 @@ pub async fn run_args(args : Array[String]) -> Int32 {
   let command = parse_args(args) catch {
     error => {
       write_stderr(
-        "moonarch: " + error_message(error) + "\n\n" + help_text() + "\n",
+        "moonarch: " +
+        @report.sanitize_terminal_text(error_message(error)) +
+        "\n\n" +
+        help_text() +
+        "\n",
       )
       return 2
     }
@@ -38,27 +42,27 @@ async fn run_command(command : @application.CliCommand) -> Int32 {
     }
   } catch {
     @application.Configuration(message) => {
-      write_stderr("moonarch: configuration error: " + message + "\n")
+      write_stderr_error("moonarch: configuration error: ", message)
       2
     }
     @application.GraphInput(message) => {
-      write_stderr("moonarch: graph input error: " + message + "\n")
+      write_stderr_error("moonarch: graph input error: ", message)
       3
     }
     @application.ProcessFailure(message) => {
-      write_stderr("moonarch: process error: " + message + "\n")
+      write_stderr_error("moonarch: process error: ", message)
       3
     }
     @application.PolicyConfiguration(message) => {
-      write_stderr("moonarch: policy error: " + message + "\n")
+      write_stderr_error("moonarch: policy error: ", message)
       2
     }
     @application.BaselineInput(message) => {
-      write_stderr("moonarch: baseline error: " + message + "\n")
+      write_stderr_error("moonarch: baseline error: ", message)
       3
     }
     @application.OutputFailure(message) => {
-      write_stderr("moonarch: output error: " + message + "\n")
+      write_stderr_error("moonarch: output error: ", message)
       3
     }
     _ => {
@@ -91,4 +95,9 @@ async fn write_stderr(text : String) -> Unit {
   @stdio.stderr.write(text) catch {
     _ => ()
   }
+}
+
+///|
+async fn write_stderr_error(prefix : String, message : String) -> Unit {
+  write_stderr(prefix + @report.sanitize_terminal_text(message) + "\n")
 }
