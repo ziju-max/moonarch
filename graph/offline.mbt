@@ -5,6 +5,9 @@ pub(all) suberror OfflineGraphError {
   UnknownField(path~ : String)
   UnsupportedVersion(Int32)
   InvalidEdgeKind(String)
+  EmptyPackageName
+  InvalidPackageName(String)
+  DanglingEdge(String, String)
   InvalidGraph
 }
 
@@ -38,7 +41,11 @@ pub fn parse_offline_json(text : String) -> Graph raise OfflineGraphError {
     edges.push(Edge::new(source~, target~, kind~))
   }
   normalize(packages, edges) catch {
-    _ => raise OfflineGraphError::InvalidGraph
+    EmptyPackageName => raise OfflineGraphError::EmptyPackageName
+    InvalidPackageName(name) =>
+      raise OfflineGraphError::InvalidPackageName(name)
+    DanglingEdge(source, target) =>
+      raise OfflineGraphError::DanglingEdge(source, target)
   }
 }
 

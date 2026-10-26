@@ -19,6 +19,9 @@ pub(all) suberror OfflineGraphError {
   UnknownField(path~ : String)
   UnsupportedVersion(Int32)
   InvalidEdgeKind(String)
+  EmptyPackageName
+  InvalidPackageName(String)
+  DanglingEdge(String, String)
   InvalidGraph
 }
 

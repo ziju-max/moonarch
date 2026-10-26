@@ -90,8 +90,18 @@ test "offline graph JSON rejects unknown fields and dangling edges" {
     |> ignore
     fail("dangling endpoints must be rejected")
   } catch {
-    @graph.OfflineGraphError::InvalidGraph => ()
+    @graph.OfflineGraphError::DanglingEdge("a", "b") => ()
     _ => fail("expected invalid graph error")
+  }
+  try {
+    @graph.parse_offline_json(
+      "{\"schema_version\":1,\"packages\":[\"a/../b\"],\"edges\":[]}",
+    )
+    |> ignore
+    fail("malformed package paths must be rejected")
+  } catch {
+    @graph.OfflineGraphError::InvalidPackageName("a/../b") => ()
+    _ => fail("expected an error that identifies the malformed package")
   }
 }
 

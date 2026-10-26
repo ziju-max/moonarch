@@ -164,6 +164,33 @@ test "zero-status Moon tree output rejects invalid UTF-8" {
 }
 
 ///|
+async test "offline graph errors identify malformed package names" {
+  let graph_path = "_build/moonarch_invalid_package_graph.json"
+  defer @fs.remove(graph_path)
+  @fs.write_file(
+    graph_path, "{\"schema_version\":1,\"packages\":[\"demo/../app\"],\"edges\":[]}",
+  )
+  let options : CheckOptions = {
+    config_path: "examples/offline/moonarch.json",
+    graph_source: OfflineGraph(graph_path),
+    moon_executable: "moon",
+    format: JsonOutput,
+    color: NeverColor,
+    output_path: None,
+  }
+  try {
+    run_check_on_date(options, "2026-10-26") |> ignore
+    fail("malformed package names must stop policy evaluation")
+  } catch {
+    GraphInput(message) => {
+      assert_true(message.contains("invalid package name"))
+      assert_true(message.contains("demo/../app"))
+    }
+    _ => fail("malformed package names must remain graph input failures")
+  }
+}
+
+///|
 async test "configuration read and decode failures stay distinct from graph errors" {
   let path = "_build/moonarch_invalid_config_test.json"
   defer @fs.remove(path)

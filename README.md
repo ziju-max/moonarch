@@ -83,7 +83,8 @@ Offline graphs use this schema:
 `.` or `..` segments. Duplicate edges are normalized away. Live graph
 compatibility currently targets the schema version returned by
 `moon tree --package --json` and rejects unknown edge kinds or unsupported
-versions.
+versions. Offline graph errors identify malformed package names and dangling
+edge endpoints.
 
 ## Rules
 

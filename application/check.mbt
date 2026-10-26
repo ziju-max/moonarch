@@ -375,6 +375,14 @@ fn offline_graph_error_text(error : @graph.OfflineGraphError) -> String {
     @graph.UnsupportedVersion(version) =>
       "unsupported offline graph version " + version.to_string()
     @graph.InvalidEdgeKind(kind) => "unknown offline graph edge kind " + kind
+    @graph.EmptyPackageName => "offline graph contains an empty package name"
+    @graph.InvalidPackageName(name) =>
+      "offline graph contains invalid package name: " + name
+    @graph.DanglingEdge(source, target) =>
+      "offline graph edge references missing package: " +
+      source +
+      " -> " +
+      target
     @graph.InvalidGraph =>
       "offline graph contains invalid packages or edge endpoints"
   }
