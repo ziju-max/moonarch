@@ -28,6 +28,7 @@ fn report_fixture() -> @report.Report {
     suppressed: [],
     resolved_fingerprints: [],
     notices: [],
+    policy_warnings: [],
   }
 }
 
@@ -67,6 +68,7 @@ test "renderers keep baseline status and resolved fingerprints visible" {
     suppressed: source.suppressed,
     resolved_fingerprints: ["v1:resolved-entry"],
     notices: source.notices,
+    policy_warnings: source.policy_warnings,
   }
   let json = @report.render_json(report)
   assert_true(json.contains("\"status\": \"existing\""))
@@ -121,6 +123,7 @@ test "Markdown renderer keeps untrusted fields inside their intended structure" 
         message: "details [click](https://example.invalid)\n## injected heading",
       },
     ],
+    policy_warnings: [],
   }
 
   let markdown = @report.render_markdown(report)
@@ -184,6 +187,7 @@ test "terminal renderer strips control characters from untrusted fields" {
         message: "warning\nFORGED",
       },
     ],
+    policy_warnings: [],
   }
 
   let terminal = @report.render_terminal(report)
@@ -192,4 +196,35 @@ test "terminal renderer strips control characters from untrusted fields" {
   assert_true(terminal.contains("rule [31m"))
   assert_true(terminal.contains("reason INJECTED (owner=owner name"))
   assert_true(!terminal.contains("\nFORGED\n"))
+}
+
+///|
+test "policy warnings appear in all reports without failing the check" {
+  let source = report_fixture()
+  let warning : @policy.PolicyWarning = {
+    code: "unmatched_group",
+    group_id: "demo/ghost",
+    message: "referenced group matches no in-scope packages",
+  }
+  let report : @report.Report = {
+    schema_version: source.schema_version,
+    input: source.input,
+    today: source.today,
+    baseline_enabled: source.baseline_enabled,
+    new_findings: [],
+    existing_findings: [],
+    suppressed: [],
+    resolved_fingerprints: [],
+    notices: [],
+    policy_warnings: [warning],
+  }
+  assert_true(!report.has_new_failures())
+  let json = @report.render_json(report)
+  assert_true(json.contains("\"unmatched_group\""))
+  assert_true(json.contains("demo/ghost"))
+  let markdown = @report.render_markdown(report)
+  assert_true(markdown.contains("## Policy warnings"))
+  assert_true(markdown.contains("demo/ghost"))
+  let terminal = @report.render_terminal(report)
+  assert_true(terminal.contains("WARNING unmatched group demo/ghost"))
 }

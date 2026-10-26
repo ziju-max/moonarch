@@ -20,8 +20,9 @@ pub fn render_markdown(report : Report) -> String {
   output.write_string(
     ", resolved " + report.resolved_fingerprints.length().to_string(),
   )
+  output.write_string(", notices " + report.notices.length().to_string())
   output.write_string(
-    ", notices " + report.notices.length().to_string() + "\n\n",
+    ", policy warnings " + report.policy_warnings.length().to_string() + "\n\n",
   )
   output.write_string("## New findings\n\n")
   write_markdown_findings(output, report.new_findings)
@@ -68,6 +69,19 @@ pub fn render_markdown(report : Report) -> String {
     )
   }
   if report.notices.is_empty() {
+    output.write_string("- None\n")
+  }
+  output.write_string("\n## Policy warnings\n\n")
+  for warning in report.policy_warnings {
+    output.write_string(
+      "- **Unmatched group** " +
+      markdown_code_span(warning.group_id) +
+      ": " +
+      markdown_text(warning.message) +
+      "\n",
+    )
+  }
+  if report.policy_warnings.is_empty() {
     output.write_string("- None\n")
   }
   output.to_string()

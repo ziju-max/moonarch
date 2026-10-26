@@ -15,8 +15,9 @@ pub fn render_terminal(report : Report) -> String {
   output.write_string(
     ", resolved: " + report.resolved_fingerprints.length().to_string(),
   )
+  output.write_string(", notices: " + report.notices.length().to_string())
   output.write_string(
-    ", notices: " + report.notices.length().to_string() + "\n",
+    ", policy warnings: " + report.policy_warnings.length().to_string() + "\n",
   )
   for finding in report.new_findings {
     write_terminal_finding(output, "NEW", finding)
@@ -53,6 +54,15 @@ pub fn render_terminal(report : Report) -> String {
       sanitize_terminal_text(notice.target) +
       ": " +
       sanitize_terminal_text(notice.message) +
+      "\n",
+    )
+  }
+  for warning in report.policy_warnings {
+    output.write_string(
+      "WARNING unmatched group " +
+      sanitize_terminal_text(warning.group_id) +
+      ": " +
+      sanitize_terminal_text(warning.message) +
       "\n",
     )
   }

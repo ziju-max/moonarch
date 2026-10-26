@@ -99,6 +99,9 @@ Exceptions match an exact rule, source, target, and context. A valid exception
 suppresses only that finding; expired exceptions remain failures, and unused
 exceptions appear as notices. Baselines compare rule/source/target/context
 fingerprints, so witness-path or message changes do not create new entries.
+Groups referenced by rules but matching no in-scope package produce stable,
+non-failing policy warnings in check reports. Groups with no rule reference are
+left alone.
 
 ## Reports and exit codes
 
@@ -124,7 +127,7 @@ report blocks or terminal escape effects.
 
 Existing baseline findings and valid suppressed findings do not fail a check.
 Resolved baseline fingerprints are included in the report but do not change the
-exit code.
+exit code. Policy warnings also remain informational and do not change it.
 
 ## Local verification
 

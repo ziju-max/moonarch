@@ -8,6 +8,19 @@ pub(all) struct Violation {
 }
 
 ///|
+pub(all) struct PolicyWarning {
+  code : String
+  group_id : String
+  message : String
+}
+
+///|
+pub(all) struct PolicyEvaluation {
+  violations : Array[Violation]
+  warnings : Array[PolicyWarning]
+}
+
+///|
 pub(all) suberror PolicyError {
   MissingLayer(String)
   OverlappingLayers(String)

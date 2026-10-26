@@ -3,6 +3,36 @@ pub fn evaluate(
   graph : @graph.Graph,
   config : @config.Config,
 ) -> Array[Violation] raise PolicyError {
+  evaluate_violations(graph, config)
+}
+
+///|
+pub fn evaluate_with_warnings(
+  graph : @graph.Graph,
+  config : @config.Config,
+) -> PolicyEvaluation raise PolicyError {
+  let violations = evaluate_violations(graph, config)
+  let referenced_groups = referenced_group_ids(config)
+  let warnings : Array[PolicyWarning] = []
+  for group in config.groups {
+    if referenced_groups.contains(group.id) &&
+      group_members(graph, config, [group.id]).is_empty() {
+      warnings.push({
+        code: "unmatched_group",
+        group_id: group.id,
+        message: "referenced group matches no in-scope packages",
+      })
+    }
+  }
+  warnings.sort_by((left, right) => text_order(left.group_id, right.group_id))
+  { violations, warnings, }
+}
+
+///|
+fn evaluate_violations(
+  graph : @graph.Graph,
+  config : @config.Config,
+) -> Array[Violation] raise PolicyError {
   let needs_layers = config.rules
     .iter()
     .any(rule => {
@@ -28,6 +58,34 @@ pub fn evaluate(
   }
   findings.sort_by(violation_order)
   findings
+}
+
+///|
+fn referenced_group_ids(config : @config.Config) -> Array[String] {
+  let ids : Array[String] = []
+  for rule in config.rules {
+    match rule {
+      @config.Deny(value) => {
+        append_unique(ids, value.from)
+        append_unique(ids, value.to)
+      }
+      @config.AllowOnly(value) => {
+        append_unique(ids, value.from)
+        append_unique(ids, value.allow)
+      }
+      @config.LayerDirection(_) | @config.MaxLayerJump(_) => ()
+    }
+  }
+  ids
+}
+
+///|
+fn append_unique(target : Array[String], values : Array[String]) -> Unit {
+  for value in values {
+    if !target.contains(value) {
+      target.push(value)
+    }
+  }
 }
 
 ///|

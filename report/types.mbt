@@ -9,6 +9,7 @@ pub(all) struct Report {
   suppressed : Array[@exception.SuppressedFinding]
   resolved_fingerprints : Array[String]
   notices : Array[@exception.ExceptionNotice]
+  policy_warnings : Array[@policy.PolicyWarning]
 }
 
 ///|

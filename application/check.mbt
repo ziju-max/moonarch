@@ -25,12 +25,12 @@ async fn run_check_on_date(
     error => raise ApplicationError::Configuration(config_error_text(error))
   }
   let graph = load_graph(options.graph_source, options.moon_executable)
-  let findings = @policy.evaluate(graph, config) catch {
+  let policy_result = @policy.evaluate_with_warnings(graph, config) catch {
     error =>
       raise ApplicationError::PolicyConfiguration(policy_error_text(error))
   }
   let exception_result = @exception.apply_exceptions(
-    findings,
+    policy_result.violations,
     config.exceptions,
     today,
   ) catch {
@@ -64,6 +64,7 @@ async fn run_check_on_date(
     suppressed: exception_result.suppressed,
     resolved_fingerprints,
     notices: exception_result.notices,
+    policy_warnings: policy_result.warnings,
   }
   { report, exit_code: if report.has_new_failures() { 1 } else { 0 }, }
 }

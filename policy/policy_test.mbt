@@ -42,6 +42,33 @@ test "transitive deny returns one shortest witness" {
 }
 
 ///|
+test "referenced groups with no in-scope packages warn in stable order" {
+  let config = parse_policy_config(
+    (
+      #|{
+      #| "schema_version": 1,
+      #| "scope": {"include": ["demo/**"]},
+      #| "groups": [
+      #|  {"id": "source", "packages": ["demo/source"]},
+      #|  {"id": "target", "packages": ["demo/target"]},
+      #|  {"id": "empty", "packages": ["demo/missing"]},
+      #|  {"id": "absent", "packages": ["demo/not-present"]},
+      #|  {"id": "unreferenced", "packages": ["demo/also-missing"]}
+      #| ],
+      #| "rules": [{"id": "deny", "type": "deny", "from": ["source", "empty", "absent"], "to": ["target", "empty"], "transitive": false, "contexts": ["normal"]}]
+      #|}
+    ),
+  )
+  let graph = @graph.normalize(["demo/source", "demo/target"], [])
+  let result = @policy.evaluate_with_warnings(graph, config)
+  assert_eq(result.violations.length(), 0)
+  assert_eq(result.warnings.length(), 2)
+  assert_eq(result.warnings[0].group_id, "absent")
+  assert_eq(result.warnings[1].group_id, "empty")
+  assert_eq(result.warnings[0].code, "unmatched_group")
+}
+
+///|
 test "allow_only rejects a direct dependency outside allowed groups" {
   let config = parse_policy_config(
     (

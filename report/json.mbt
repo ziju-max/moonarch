@@ -9,6 +9,7 @@ pub fn render_json(report : Report) -> String {
   let suppressed_items = report.suppressed.map(render_suppressed_json)
   let resolved_items = report.resolved_fingerprints.map(json_string)
   let notice_items = report.notices.map(render_notice_json)
+  let warning_items = report.policy_warnings.map(render_policy_warning_json)
   let output = StringBuilder()
   output.write_string("{\n")
   output.write_string(
@@ -31,8 +32,9 @@ pub fn render_json(report : Report) -> String {
   output.write_string(
     ", \"resolved\": " + report.resolved_fingerprints.length().to_string(),
   )
+  output.write_string(", \"notices\": " + report.notices.length().to_string())
   output.write_string(
-    ", \"notices\": " + report.notices.length().to_string() + "},\n",
+    ", \"warnings\": " + report.policy_warnings.length().to_string() + "},\n",
   )
   output.write_string("  \"new_findings\": [" + new_items.join(", ") + "],\n")
   output.write_string(
@@ -44,7 +46,10 @@ pub fn render_json(report : Report) -> String {
   output.write_string(
     "  \"resolved_fingerprints\": [" + resolved_items.join(", ") + "],\n",
   )
-  output.write_string("  \"notices\": [" + notice_items.join(", ") + "]\n")
+  output.write_string("  \"notices\": [" + notice_items.join(", ") + "],\n")
+  output.write_string(
+    "  \"policy_warnings\": [" + warning_items.join(", ") + "]\n",
+  )
   output.write_string("}\n")
   output.to_string()
 }
@@ -104,6 +109,17 @@ fn render_notice_json(notice : @exception.ExceptionNotice) -> String {
   json_string(notice.target) +
   ", \"message\": " +
   json_string(notice.message) +
+  "}"
+}
+
+///|
+fn render_policy_warning_json(warning : @policy.PolicyWarning) -> String {
+  "{\"code\": " +
+  json_string(warning.code) +
+  ", \"group_id\": " +
+  json_string(warning.group_id) +
+  ", \"message\": " +
+  json_string(warning.message) +
   "}"
 }
 

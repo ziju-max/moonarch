@@ -17,12 +17,13 @@ async test "offline check evaluates policies and returns a report exit code" {
       #|  "scope": {"include": ["demo/**"]},
       #|  "groups": [
       #|    {"id": "domain", "packages": ["demo/domain"]},
-      #|    {"id": "storage", "packages": ["demo/storage"]}
+      #|    {"id": "storage", "packages": ["demo/storage"]},
+      #|    {"id": "ghost", "packages": ["demo/missing"]}
       #|  ],
       #|  "rules": [{
       #|    "id": "no-storage",
       #|    "type": "deny",
-      #|    "from": ["domain"],
+      #|    "from": ["domain", "ghost"],
       #|    "to": ["storage"],
       #|    "transitive": true,
       #|    "contexts": ["normal"]
@@ -47,9 +48,13 @@ async test "offline check evaluates policies and returns a report exit code" {
   }
   let execution = run_check_on_date(options, "2026-10-26")
   assert_eq(execution.exit_code, 1)
+  assert_eq(execution.report.policy_warnings.length(), 1)
+  assert_eq(execution.report.policy_warnings[0].group_id, "ghost")
   let json = @report.render_json(execution.report)
   assert_true(json.contains("\"rule_id\": \"no-storage\""))
   assert_true(json.contains("\"target\": \"demo/storage\""))
+  assert_true(json.contains("\"policy_warnings\""))
+  assert_true(json.contains("\"group_id\": \"ghost\""))
   let forced_color = render_report(
     execution.report,
     TerminalOutput,

@@ -9,6 +9,8 @@ import {
 // Values
 pub fn evaluate(@graph.Graph, @config.Config) -> Array[Violation] raise PolicyError
 
+pub fn evaluate_with_warnings(@graph.Graph, @config.Config) -> PolicyEvaluation raise PolicyError
+
 // Errors
 pub(all) suberror PolicyError {
   MissingLayer(String)
@@ -16,6 +18,17 @@ pub(all) suberror PolicyError {
 }
 
 // Types and methods
+pub(all) struct PolicyEvaluation {
+  violations : Array[Violation]
+  warnings : Array[PolicyWarning]
+}
+
+pub(all) struct PolicyWarning {
+  code : String
+  group_id : String
+  message : String
+}
+
 pub(all) struct Violation {
   rule_id : String
   source : String
