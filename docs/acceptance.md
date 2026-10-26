@@ -15,8 +15,8 @@ noreply 地址所需的 ID 与创建日期；未读取邮箱列表、令牌或�
   来源说明区分了原创实现、官方 `moon tree` 接口、运行依赖和 CI-only actions。
 - `examples/offline` 是自包含的图与策略演示；`examples/workspace` 是可由
   `moon tree --package --json` 检查的真实多包 MoonBit 模块。
-- `.gitignore` 排除了 `_build`、`.mooncakes`、临时输出和二进制产物。当前工作树状态只显示
-  预期的项目源文件/文档待加入本地 Git；未发现构建产物进入项目目录。
+- `.gitignore` 排除了 `_build`、`.mooncakes`、临时输出、二进制产物和本地实施计划。未发现
+  构建产物进入初始快照。
 - 本地许可证文件为 Apache-2.0。示例为新写的合成数据；没有把旧 MoonArch 目录或其 Git 历史
   带入新目录。
 
@@ -47,23 +47,23 @@ noreply 地址所需的 ID 与创建日期；未读取邮箱列表、令牌或�
 | `moon test --target native --deny-warn` | 55 项通过，0 失败 |
 | `scripts/verify-demo.ps1` | 通过，退出码 0；包含新发现/配置错误/图错误的预期退出码、baseline 一致性、报告与 live 模式，并单独检查/构建 live 示例模块 |
 | `scripts/audit-source.ps1` | 43 个 MoonBit 源文件；生产非空非行注释物理行 2,930；测试 1,266；总计 4,196，独立排除任意层级 `_build`/`.mooncakes` |
-| 文本文件空白检查 | 通过，无行尾空白；`git diff --check` 退出码 0（本仓库尚无提交，项目文件仍为未跟踪状态） |
+| 文本文件空白检查 | 通过，无行尾空白；`git diff --check` 退出码 0 |
 
 源码审计计数是物理源文件行数，包含测试中的多行 fixture 字符串；它不是代码复杂度、独立逻辑语句数
 或比赛方 LOC 工具的承诺值。
 
 ## Git 与远程状态
 
-- 本地分支为 `main`；当前没有提交（0 commits），没有配置 remote。
+- 本地分支为 `main`；初始快照为 `435ee22`（`feat: add MoonArch architecture checker MVP`），仓库级作者配置为 `ziju-max` 和当前账号 ID 型 noreply 邮箱；没有配置 remote。
 - 远程默认分支因此无法核实；本次没有读取远程仓库内容、提交历史、凭据或令牌。
-- 通过当前 CLI 身份核验得到了 `ziju-max` 的 ID 型 noreply 邮箱；仓库级 Git 作者配置尚未写入，
-  仍无提交。没有伪造历史，也没有读取全局 Git 身份。
+- 初始提交只记录完整 MVP 快照，没有把过去的开发拆分或伪装成多次提交。用户要求的 10 次以上
+  实质提交仍未达到；后续只随真实的功能或质量改动增加提交，不做空提交。
 - workflow 文件已加入 `.github/workflows/ci.yml` 并按本地命令审阅；GitHub 托管 runner 上的 CI 尚未执行。
 
 ## 待处理与赛事边界
 
-- 这是本地 MVP 自查，不代表可立即完成远程提交或赛事验收。若要形成真实提交历史，仍需用户明确本地 Git
-  提交作者名与邮箱；远程操作必须继续等待用户明确指示。
+- 这是本地 MVP 自查，不代表可立即完成远程发布或赛事验收。继续本地开发可沿用已核验的仓库级作者身份；
+  任何远程操作仍需用户明确指示。
 - Mooncakes 发布状态与远程默认分支均未检查。是否为 2026 年 10 月黑客松硬性要求，应以该期官方说明为准，
   不套用其他赛事/往期 hackathon 规则。
 - [2026 年 10 月黑客松官网](https://moonbitlang.github.io/Hackathon2026/) 与
