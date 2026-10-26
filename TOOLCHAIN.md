@@ -1,7 +1,8 @@
 # MoonBit toolchain
 
-The executable was checked locally on 2026-10-26 after running the official
-`moon upgrade` command. The updater reported that it was up to date.
+The executable was checked locally on 2026-10-27 after running the official
+stable-channel `moon upgrade` command. The installation completed, and
+`moon version --all` confirmed the resulting component versions below.
 
 | Component | Installed stable version | Build date |
 | --- | --- | --- |
@@ -18,7 +19,8 @@ moonrun --version
 moon upgrade
 ```
 
-The official updater is the stable-channel provenance used for this check.
+The official updater and [MoonBit download page](https://www.moonbitlang.com/download)
+are the stable-channel provenance used for this check.
 See the [MoonBit CLI command reference](https://docs.moonbitlang.com/en/stable/toolchain/moon/commands.html)
 and [official release notes](https://www.moonbitlang.com/updates/2026/09/21/index).
 No development or nightly toolchain was selected. Re-run the commands above

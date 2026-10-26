@@ -62,6 +62,12 @@ try {
   moon run cmd/main --target native -- check --config examples/offline/moonarch.json --graph _build/missing-graph.json
   if ($LASTEXITCODE -ne 3) { throw "expected graph input error to return 3, got $LASTEXITCODE" }
 
+  $missingOutputDirectory = '_build/moonarch-output-parent-' + [guid]::NewGuid().ToString('N')
+  $missingOutputPath = Join-Path $missingOutputDirectory 'baseline.json'
+  moon run cmd/main --target native -- baseline create --output $missingOutputPath --config examples/offline/moonarch.json --graph examples/offline/graph.json
+  if ($LASTEXITCODE -ne 3) { throw "expected baseline output error to return 3, got $LASTEXITCODE" }
+  if (Test-Path -LiteralPath $missingOutputDirectory) { throw 'baseline output failure unexpectedly created its missing parent directory' }
+
   moon run cmd/main --target native -- check --config examples/offline/moonarch.json --graph examples/offline/graph.json
   if ($LASTEXITCODE -ne 1) { throw "expected new findings to return 1, got $LASTEXITCODE" }
 

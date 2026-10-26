@@ -190,3 +190,63 @@ async test "workspace process launch errors do not become empty successful graph
     _ => fail("process launch failure must not become a policy result")
   }
 }
+
+///|
+async test "baseline input failure never overwrites the existing destination" {
+  let config_path = "_build/moonarch_preserve_baseline_config.json"
+  let graph_path = "_build/moonarch_preserve_baseline_graph.json"
+  let baseline_path = "_build/moonarch_preserve_baseline.json"
+  defer @fs.remove(config_path)
+  defer @fs.remove(graph_path)
+  defer @fs.remove(baseline_path)
+  @fs.write_file(
+    config_path, "{\"schema_version\":1,\"scope\":{\"include\":[\"demo/**\"]},\"groups\":[],\"rules\":[]}",
+  )
+  @fs.write_file(graph_path, "invalid graph")
+  @fs.write_file(baseline_path, "keep this baseline")
+  let options : CheckOptions = {
+    config_path,
+    graph_source: OfflineGraph(graph_path),
+    moon_executable: "moon",
+    format: JsonOutput,
+    color: NeverColor,
+    output_path: None,
+  }
+  try {
+    create_baseline(options, baseline_path)
+    fail("invalid input must stop baseline creation")
+  } catch {
+    GraphInput(_) => ()
+    _ => fail("invalid graph must remain a graph input error")
+  }
+  assert_eq(@fs.read_file(baseline_path).text(), "keep this baseline")
+}
+
+///|
+async test "baseline destination write failure is reported as output failure" {
+  let config_path = "_build/moonarch_output_failure_config.json"
+  let graph_path = "_build/moonarch_output_failure_graph.json"
+  defer @fs.remove(config_path)
+  defer @fs.remove(graph_path)
+  @fs.write_file(
+    config_path, "{\"schema_version\":1,\"scope\":{\"include\":[\"demo/**\"]},\"groups\":[],\"rules\":[]}",
+  )
+  @fs.write_file(
+    graph_path, "{\"schema_version\":1,\"packages\":[\"demo/app\"],\"edges\":[]}",
+  )
+  let options : CheckOptions = {
+    config_path,
+    graph_source: OfflineGraph(graph_path),
+    moon_executable: "moon",
+    format: JsonOutput,
+    color: NeverColor,
+    output_path: None,
+  }
+  try {
+    create_baseline(options, config_path + "/baseline.json")
+    fail("a missing parent directory must reject the baseline write")
+  } catch {
+    OutputFailure(message) => assert_true(message.contains("atomically"))
+    _ => fail("baseline destination errors must remain output failures")
+  }
+}
