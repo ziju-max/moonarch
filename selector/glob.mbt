@@ -15,6 +15,11 @@ pub fn matches(pattern : String, package_name : String) -> Bool {
 }
 
 ///|
+pub fn is_valid_package_name(package_name : String) -> Bool {
+  valid_package_name(package_name)
+}
+
+///|
 pub fn expand(
   patterns : Array[String],
   packages : Array[String],
@@ -49,6 +54,11 @@ fn valid_package_name(package_name : String) -> Bool {
     package_name.contains_char('*') {
     return false
   }
+  for segment in split_segments(package_name) {
+    if segment == "." || segment == ".." {
+      return false
+    }
+  }
   true
 }
 
@@ -61,6 +71,9 @@ pub fn validate_pattern(pattern : String) -> Bool {
     return false
   }
   for segment in split_segments(pattern) {
+    if segment == "." || segment == ".." {
+      return false
+    }
     if segment.contains("**") && segment != "**" {
       return false
     }

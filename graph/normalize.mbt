@@ -16,6 +16,9 @@ pub fn normalize(
     if package_name.trim().is_empty() {
       raise GraphError::EmptyPackageName
     }
+    if !@selector.is_valid_package_name(package_name) {
+      raise GraphError::InvalidPackageName(package_name)
+    }
     if unique_packages.is_empty() ||
       unique_packages[unique_packages.length() - 1] != package_name {
       unique_packages.push(package_name)

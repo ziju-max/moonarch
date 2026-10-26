@@ -22,6 +22,20 @@ test "normalization rejects an empty package name" {
 }
 
 ///|
+test "normalization rejects path traversal package segments" {
+  for package_name in ["acme/./app", "acme/../app", "../app"] {
+    try {
+      @graph.normalize([package_name], []) |> ignore
+      fail("dot path segments must not enter the package graph")
+    } catch {
+      @graph.GraphError::InvalidPackageName(value) =>
+        assert_eq(value, package_name)
+      _ => fail("malformed package names must be rejected explicitly")
+    }
+  }
+}
+
+///|
 test "normalization rejects dangling endpoints" {
   let edge = @graph.Edge::new(
     source="a/pkg",

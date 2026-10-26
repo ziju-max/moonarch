@@ -4,6 +4,8 @@ package "ziju-max/moonarch/selector"
 // Values
 pub fn expand(Array[String], Array[String]) -> Array[String] raise SelectorError
 
+pub fn is_valid_package_name(String) -> Bool
+
 pub fn matches(String, String) -> Bool
 
 pub fn validate_pattern(String) -> Bool

@@ -9,6 +9,7 @@ pub fn parse_offline_json(String) -> Graph raise OfflineGraphError
 // Errors
 pub(all) suberror GraphError {
   EmptyPackageName
+  InvalidPackageName(String)
   DanglingEdge(String, String)
 }
 

@@ -33,3 +33,12 @@ test "empty pattern and malformed separators are errors" {
     _ => fail("unexpected selector error")
   }
 }
+
+///|
+test "package selectors reject dot path segments" {
+  assert_false(@selector.matches("**", "acme/./app"))
+  assert_false(@selector.matches("**", "acme/../app"))
+  assert_false(@selector.matches("**", "../app"))
+  assert_false(@selector.validate_pattern("acme/./app"))
+  assert_false(@selector.validate_pattern("acme/../app"))
+}

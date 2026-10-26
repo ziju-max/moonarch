@@ -46,5 +46,6 @@ pub fn Edge::kind(self : Edge) -> ImportKind {
 ///|
 pub(all) suberror GraphError {
   EmptyPackageName
+  InvalidPackageName(String)
   DanglingEdge(String, String)
 }

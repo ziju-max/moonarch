@@ -79,9 +79,11 @@ Offline graphs use this schema:
 ```
 
 `kind` is `normal`, `test`, or `wbtest`. Every edge endpoint must appear in
-`packages`; duplicate edges are normalized away. Live graph compatibility
-currently targets the schema version returned by `moon tree --package --json`
-and rejects unknown edge kinds or unsupported versions.
+`packages`; package IDs must be relative slash-separated paths without empty,
+`.` or `..` segments. Duplicate edges are normalized away. Live graph
+compatibility currently targets the schema version returned by
+`moon tree --package --json` and rejects unknown edge kinds or unsupported
+versions.
 
 ## Rules
 
