@@ -15,18 +15,11 @@ pub async fn run_args(args : Array[String]) -> Int32 {
 async fn run_command(command : @application.CliCommand) -> Int32 {
   try {
     match command {
-      @application.Help => {
-        write_stdout(help_text() + "\n")
-        0
-      }
-      @application.Version => {
-        write_stdout(version() + "\n")
-        0
-      }
+      @application.Help => write_success_message(help_text() + "\n")
+      @application.Version => write_success_message(version() + "\n")
       @application.ValidateConfig(path) => {
         @application.validate_config_file(path)
-        write_stdout("configuration valid: " + path + "\n")
-        0
+        write_success_message("configuration valid: " + path + "\n")
       }
       @application.Check(options) => {
         let execution = @application.run_check(options)
@@ -40,8 +33,7 @@ async fn run_command(command : @application.CliCommand) -> Int32 {
       }
       @application.CreateBaseline(options, path) => {
         @application.create_baseline(options, path)
-        write_stdout("baseline written: " + path + "\n")
-        0
+        write_success_message("baseline written: " + path + "\n")
       }
     }
   } catch {
@@ -77,10 +69,21 @@ async fn run_command(command : @application.CliCommand) -> Int32 {
 }
 
 ///|
-async fn write_stdout(text : String) -> Unit {
-  @stdio.stdout.write(text) catch {
-    _ => ()
+async fn write_success_message(text : String) -> Int32 {
+  if write_stdout(text) {
+    0
+  } else {
+    write_stderr("moonarch: output error: could not write to stdout\n")
+    3
   }
+}
+
+///|
+async fn write_stdout(text : String) -> Bool {
+  @stdio.stdout.write(text) catch {
+    _ => return false
+  }
+  true
 }
 
 ///|

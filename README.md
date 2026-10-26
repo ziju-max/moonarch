@@ -106,6 +106,8 @@ fingerprints, so witness-path or message changes do not create new entries.
 report to a file. JSON and Markdown never include ANSI color codes. `--color
 always` forces color for terminal output; `never` disables it. `auto` currently
 uses plain output because this CLI does not yet detect whether stdout is a TTY.
+If a success message cannot be written to stdout, the CLI returns output-error
+exit code `3` instead of reporting success.
 Terminal and Markdown reports flatten control characters in input values.
 Markdown reports also escape inline markup and choose code-span delimiters
 based on their content, so package names and exception text cannot create extra

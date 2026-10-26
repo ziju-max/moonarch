@@ -14,6 +14,26 @@ try {
   moon test --target native --deny-warn
   if ($LASTEXITCODE -ne 0) { throw 'moon test failed' }
 
+  $binary = Join-Path $root '_build/native/debug/build/cmd/main/main.exe'
+  $processInfo = [System.Diagnostics.ProcessStartInfo]::new()
+  $processInfo.FileName = $binary
+  $processInfo.Arguments = 'config validate --config examples/offline/moonarch.json'
+  $processInfo.WorkingDirectory = $root
+  $processInfo.UseShellExecute = $false
+  $processInfo.RedirectStandardOutput = $true
+  $processInfo.RedirectStandardError = $true
+  $process = [System.Diagnostics.Process]::new()
+  $process.StartInfo = $processInfo
+  [void]$process.Start()
+  $process.StandardOutput.Close()
+  $process.WaitForExit()
+  $stdoutFailureCode = $process.ExitCode
+  $processError = $process.StandardError.ReadToEnd()
+  $process.Dispose()
+  if ($stdoutFailureCode -ne 3) {
+    throw "expected stdout write failure to return 3, got $stdoutFailureCode; stderr: $processError"
+  }
+
   moon run cmd/main --target native -- config validate --config examples/offline/moonarch.json
   if ($LASTEXITCODE -ne 0) { throw 'offline configuration validation failed' }
 

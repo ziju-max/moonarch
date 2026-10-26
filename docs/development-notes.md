@@ -16,6 +16,9 @@ explain and demonstrate:
 - what each report status and CLI exit code means;
 - which local checks ran and which platform or remote checks did not run.
 
-The local author identity and commit history must be established by the
-participant before any commit is created. No GitHub account or remote was
-inspected or used during implementation.
+The user supplied `ziju-max` as the sole allowed account identity and authorized
+checking the active GitHub CLI identity for the repository-local author setup.
+Only the account ID needed to form that account's ID-based noreply address was
+read; no other account, historical identity, credentials, or global Git author
+configuration was inspected. The local repository uses that identity, has no
+remote configured, and has not been pushed or otherwise accessed remotely.
