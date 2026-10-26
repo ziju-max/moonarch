@@ -1,0 +1,17 @@
+{
+  "version": 3,
+  "status": "success",
+  "error": null,
+  "target": "native",
+  "root": [0, 1, 2],
+  "nodes": [
+    {"module": "demo/workspace", "version": "0.1.0", "source": {"kind": "local"}, "rel": "app"},
+    {"module": "demo/workspace", "version": "0.1.0", "source": {"kind": "local"}, "rel": "domain"},
+    {"module": "demo/workspace", "version": "0.1.0", "source": {"kind": "local"}, "rel": "storage"}
+  ],
+  "edges": [
+    {"from": 0, "to": 1, "alias": "domain", "kinds": ["source"]},
+    {"from": 1, "to": 2, "alias": "storage", "kinds": ["source", "blackbox-test"]}
+  ],
+  "logs": []
+}

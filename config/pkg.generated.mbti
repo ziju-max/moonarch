@@ -1,0 +1,101 @@
+// Generated using `moon info`, DON'T EDIT IT
+package "ziju-max/moonarch/config"
+
+import {
+  "ziju-max/moonarch/graph",
+}
+
+// Values
+pub fn parse_config(String) -> Config raise ConfigError
+
+pub fn validate_config(Config) -> Unit raise ConfigError
+
+// Errors
+pub(all) suberror ConfigError {
+  InvalidJson(String)
+  ExpectedObject(String)
+  ExpectedArray(String)
+  MissingField(String)
+  TypeMismatch(String)
+  UnknownField(path~ : String)
+  InvalidValue(path~ : String, detail~ : String)
+  DuplicateId(id~ : String)
+  UnknownGroup(path~ : String, id~ : String)
+  DuplicateContext(path~ : String, context~ : String)
+  InvalidDate(path~ : String, value~ : String)
+}
+
+// Types and methods
+pub(all) struct AllowOnlyRule {
+  id : String
+  from : Array[String]
+  allow : Array[String]
+  contexts : Array[@graph.Context]
+}
+
+pub(all) struct Config {
+  schema_version : Int32
+  scope : Scope
+  groups : Array[Group]
+  layers : Array[Layer]
+  rules : Array[Rule]
+  exceptions : Array[Exception]
+  baseline : String?
+}
+
+pub(all) struct DenyRule {
+  id : String
+  from : Array[String]
+  to : Array[String]
+  transitive : Bool
+  contexts : Array[@graph.Context]
+}
+
+pub(all) struct Exception {
+  rule_id : String
+  source : String
+  target : String
+  context : @graph.Context
+  reason : String
+  owner : String
+  expires : String
+}
+
+pub(all) struct Group {
+  id : String
+  packages : Array[String]
+}
+
+pub(all) struct Layer {
+  id : String
+  packages : Array[String]
+  level : Int32
+}
+
+pub(all) struct LayerDirectionRule {
+  id : String
+  contexts : Array[@graph.Context]
+}
+
+pub(all) struct MaxLayerJumpRule {
+  id : String
+  max : Int32
+  contexts : Array[@graph.Context]
+}
+
+pub(all) enum Rule {
+  Deny(DenyRule)
+  AllowOnly(AllowOnlyRule)
+  LayerDirection(LayerDirectionRule)
+  MaxLayerJump(MaxLayerJumpRule)
+}
+pub fn Rule::id(Self) -> String
+
+pub(all) struct Scope {
+  includes : Array[String]
+  exclude : Array[String]
+}
+
+// Type aliases
+
+// Traits

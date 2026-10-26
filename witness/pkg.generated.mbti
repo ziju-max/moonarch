@@ -1,0 +1,19 @@
+// Generated using `moon info`, DON'T EDIT IT
+package "ziju-max/moonarch/witness"
+
+import {
+  "ziju-max/moonarch/graph",
+}
+
+// Values
+pub fn find_path(@graph.Graph, String, String, @graph.Context) -> Array[@graph.Edge]?
+
+pub fn path_contains_required_kind(Array[@graph.Edge], @graph.Context) -> Bool
+
+// Errors
+
+// Types and methods
+
+// Type aliases
+
+// Traits

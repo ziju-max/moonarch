@@ -1,0 +1,25 @@
+// Generated using `moon info`, DON'T EDIT IT
+package "ziju-max/moonarch/moon_tree"
+
+import {
+  "ziju-max/moonarch/graph",
+}
+
+// Values
+pub fn parse_moon_tree_json(String) -> @graph.Graph raise MoonTreeError
+
+// Errors
+pub(all) suberror MoonTreeError {
+  InvalidJson
+  UnsupportedVersion(Int32)
+  InvalidStatus(String)
+  InvalidShape(String)
+  InvalidEdgeKind(String)
+  InvalidGraph
+}
+
+// Types and methods
+
+// Type aliases
+
+// Traits

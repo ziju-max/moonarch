@@ -1,0 +1,41 @@
+// Generated using `moon info`, DON'T EDIT IT
+package "ziju-max/moonarch/baseline"
+
+import {
+  "ziju-max/moonarch/policy",
+}
+
+// Values
+pub fn classify(Array[@policy.Violation], Baseline) -> BaselineResult
+
+pub fn fingerprint(@policy.Violation) -> String
+
+pub fn parse_baseline(String) -> Baseline raise BaselineError
+
+pub fn serialize_baseline(Baseline) -> String
+
+// Errors
+pub(all) suberror BaselineError {
+  InvalidJson
+  InvalidShape(String)
+  UnknownField(String)
+  UnsupportedVersion(Int32)
+  DuplicateFingerprint(String)
+}
+
+// Types and methods
+pub(all) struct Baseline {
+  schema_version : Int32
+  fingerprints : Array[String]
+}
+pub fn Baseline::from_fingerprints(Array[String]) -> Self
+
+pub(all) struct BaselineResult {
+  new_findings : Array[@policy.Violation]
+  existing_findings : Array[@policy.Violation]
+  resolved_fingerprints : Array[String]
+}
+
+// Type aliases
+
+// Traits

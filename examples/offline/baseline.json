@@ -1,0 +1,4 @@
+{
+  "schema_version": 1,
+  "fingerprints": ["v1:10:layer-jump:7:demo/ui:9:demo/core:6:normal", "v1:15:layer-direction:11:demo/domain:7:demo/ui:6:normal", "v1:15:layer-direction:9:demo/core:11:demo/domain:6:normal", "v1:17:no-domain-storage:11:demo/domain:12:demo/storage:6:normal"]
+}

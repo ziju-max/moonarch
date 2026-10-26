@@ -1,0 +1,81 @@
+// Generated using `moon info`, DON'T EDIT IT
+package "ziju-max/moonarch/application"
+
+import {
+  "ziju-max/moonarch/report",
+}
+
+// Values
+pub async fn create_baseline(CheckOptions, String) -> Unit raise ApplicationError
+
+pub fn render_report(@report.Report, OutputFormat, ColorMode) -> String
+
+pub async fn run_check(CheckOptions) -> CheckExecution raise ApplicationError
+
+pub async fn validate_config_file(String) -> Unit raise ApplicationError
+
+pub async fn write_result(String?, String) -> Unit raise ApplicationError
+
+// Errors
+pub(all) suberror ApplicationError {
+  Configuration(String)
+  GraphInput(String)
+  ProcessFailure(String)
+  PolicyConfiguration(String)
+  BaselineInput(String)
+  OutputFailure(String)
+}
+
+pub(all) suberror CliError {
+  UnknownOption(String)
+  MissingValue(String)
+  InvalidValue(option~ : String, value~ : String)
+  ConflictingInputs
+  MissingGraphSource
+  MissingOutput
+  UnexpectedArgument(String)
+}
+
+// Types and methods
+pub(all) struct CheckExecution {
+  report : @report.Report
+  exit_code : Int32
+}
+
+pub(all) struct CheckOptions {
+  config_path : String
+  graph_source : GraphSource
+  moon_executable : String
+  format : OutputFormat
+  color : ColorMode
+  output_path : String?
+}
+
+pub(all) enum CliCommand {
+  Help
+  Version
+  ValidateConfig(String)
+  Check(CheckOptions)
+  CreateBaseline(CheckOptions, String)
+}
+
+pub(all) enum ColorMode {
+  AutoColor
+  AlwaysColor
+  NeverColor
+}
+
+pub(all) enum GraphSource {
+  OfflineGraph(String)
+  Workspace(String)
+}
+
+pub(all) enum OutputFormat {
+  TerminalOutput
+  JsonOutput
+  MarkdownOutput
+}
+
+// Type aliases
+
+// Traits

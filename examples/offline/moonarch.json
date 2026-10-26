@@ -1,0 +1,45 @@
+{
+  "schema_version": 1,
+  "scope": {"include": ["demo/**"]},
+  "groups": [
+    {"id": "domain", "packages": ["demo/domain"]},
+    {"id": "ui", "packages": ["demo/ui"]},
+    {"id": "storage", "packages": ["demo/storage"]}
+  ],
+  "layers": [
+    {"id": "core", "packages": ["demo/core"], "level": 0},
+    {"id": "domain", "packages": ["demo/domain", "demo/storage"], "level": 1},
+    {"id": "service", "packages": ["demo/service"], "level": 2},
+    {"id": "ui", "packages": ["demo/ui"], "level": 3}
+  ],
+  "rules": [
+    {
+      "id": "no-domain-storage",
+      "type": "deny",
+      "from": ["domain"],
+      "to": ["storage"],
+      "transitive": true,
+      "contexts": ["normal"]
+    },
+    {
+      "id": "domain-allow-list",
+      "type": "allow_only",
+      "from": ["domain"],
+      "allow": ["storage"],
+      "contexts": ["normal"]
+    },
+    {"id": "layer-direction", "type": "layer_direction", "contexts": ["normal"]},
+    {"id": "layer-jump", "type": "max_layer_jump", "max": 1, "contexts": ["normal"]}
+  ],
+  "exceptions": [
+    {
+      "rule_id": "domain-allow-list",
+      "source": "demo/domain",
+      "target": "demo/ui",
+      "context": "normal",
+      "reason": "The sample demonstrates an approved temporary adapter edge.",
+      "owner": "ziju-max",
+      "expires": "2026-12-31"
+    }
+  ]
+}

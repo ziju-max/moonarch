@@ -1,0 +1,49 @@
+// Generated using `moon info`, DON'T EDIT IT
+package "ziju-max/moonarch/exception"
+
+import {
+  "ziju-max/moonarch/config",
+  "ziju-max/moonarch/policy",
+}
+
+// Values
+pub fn apply_exceptions(Array[@policy.Violation], Array[@config.Exception], String) -> ExceptionResult raise ExceptionError
+
+// Errors
+pub(all) suberror ExceptionError {
+  InvalidToday(String)
+  DuplicateMatch(String)
+}
+
+// Types and methods
+pub(all) struct ExceptionNotice {
+  kind : NoticeKind
+  rule_id : String
+  source : String
+  target : String
+  message : String
+}
+
+pub(all) struct ExceptionResult {
+  visible : Array[@policy.Violation]
+  suppressed : Array[SuppressedFinding]
+  notices : Array[ExceptionNotice]
+}
+
+pub(all) enum NoticeKind {
+  ExpiredException
+  UnusedException
+} derive(Eq)
+pub fn NoticeKind::equal(Self, Self) -> Bool
+pub fn NoticeKind::not_equal(Self, Self) -> Bool
+
+pub(all) struct SuppressedFinding {
+  violation : @policy.Violation
+  reason : String
+  owner : String
+  expires : String
+}
+
+// Type aliases
+
+// Traits

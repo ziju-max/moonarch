@@ -1,0 +1,16 @@
+_build/
+.mooncakes/
+.repos/
+.moonagent/
+target/
+*.exe
+*.dll
+*.so
+*.dylib
+.DS_Store
+.idea/
+.vscode/
+tmp-demo-*/
+
+# Local agent planning artifacts; the approved design spec remains publishable.
+/docs/superpowers/plans/

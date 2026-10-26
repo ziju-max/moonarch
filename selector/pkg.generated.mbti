@@ -1,0 +1,21 @@
+// Generated using `moon info`, DON'T EDIT IT
+package "ziju-max/moonarch/selector"
+
+// Values
+pub fn expand(Array[String], Array[String]) -> Array[String] raise SelectorError
+
+pub fn matches(String, String) -> Bool
+
+pub fn validate_pattern(String) -> Bool
+
+// Errors
+pub(all) suberror SelectorError {
+  EmptyPattern
+  MalformedPattern(String)
+}
+
+// Types and methods
+
+// Type aliases
+
+// Traits

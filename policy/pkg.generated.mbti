@@ -1,0 +1,29 @@
+// Generated using `moon info`, DON'T EDIT IT
+package "ziju-max/moonarch/policy"
+
+import {
+  "ziju-max/moonarch/config",
+  "ziju-max/moonarch/graph",
+}
+
+// Values
+pub fn evaluate(@graph.Graph, @config.Config) -> Array[Violation] raise PolicyError
+
+// Errors
+pub(all) suberror PolicyError {
+  MissingLayer(String)
+  OverlappingLayers(String)
+}
+
+// Types and methods
+pub(all) struct Violation {
+  rule_id : String
+  source : String
+  target : String
+  context : @graph.Context
+  path : Array[@graph.Edge]
+}
+
+// Type aliases
+
+// Traits

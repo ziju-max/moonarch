@@ -1,0 +1,17 @@
+{
+  "schema_version": 1,
+  "packages": [
+    "demo/core",
+    "demo/domain",
+    "demo/service",
+    "demo/ui",
+    "demo/storage"
+  ],
+  "edges": [
+    {"source": "demo/core", "target": "demo/domain", "kind": "normal"},
+    {"source": "demo/domain", "target": "demo/ui", "kind": "normal"},
+    {"source": "demo/ui", "target": "demo/core", "kind": "normal"},
+    {"source": "demo/ui", "target": "demo/service", "kind": "normal"},
+    {"source": "demo/service", "target": "demo/storage", "kind": "normal"}
+  ]
+}

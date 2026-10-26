@@ -1,0 +1,69 @@
+// Generated using `moon info`, DON'T EDIT IT
+package "ziju-max/moonarch/graph"
+
+// Values
+pub fn normalize(Array[String], Array[Edge]) -> Graph raise GraphError
+
+pub fn parse_offline_json(String) -> Graph raise OfflineGraphError
+
+// Errors
+pub(all) suberror GraphError {
+  EmptyPackageName
+  DanglingEdge(String, String)
+}
+
+pub(all) suberror OfflineGraphError {
+  InvalidJson
+  InvalidShape(String)
+  UnknownField(path~ : String)
+  UnsupportedVersion(Int32)
+  InvalidEdgeKind(String)
+  InvalidGraph
+}
+
+// Types and methods
+pub(all) enum Context {
+  NormalContext
+  TestContext
+  WbtestContext
+} derive(Eq)
+pub fn Context::allows(Self, ImportKind) -> Bool
+pub fn Context::as_string(Self) -> String
+pub fn Context::equal(Self, Self) -> Bool
+pub fn Context::not_equal(Self, Self) -> Bool
+pub fn Context::required_kind(Self) -> ImportKind?
+
+pub(all) struct Edge {
+  source : String
+  target : String
+  kind : ImportKind
+} derive(Eq)
+pub fn Edge::equal(Self, Self) -> Bool
+pub fn Edge::kind(Self) -> ImportKind
+pub fn Edge::new(source~ : String, target~ : String, kind~ : ImportKind) -> Self
+pub fn Edge::not_equal(Self, Self) -> Bool
+pub fn Edge::source(Self) -> String
+pub fn Edge::target(Self) -> String
+
+pub struct Graph {
+  packages : Array[String]
+  edges : Array[Edge]
+}
+pub fn Graph::edges(Self) -> Array[Edge]
+pub fn Graph::has_edge(Self, String, String, ImportKind) -> Bool
+pub fn Graph::has_package(Self, String) -> Bool
+pub fn Graph::outgoing(Self, String, Context) -> Array[Edge]
+pub fn Graph::packages(Self) -> Array[String]
+
+pub(all) enum ImportKind {
+  Normal
+  Test
+  Wbtest
+} derive(Eq)
+pub fn ImportKind::as_string(Self) -> String
+pub fn ImportKind::equal(Self, Self) -> Bool
+pub fn ImportKind::not_equal(Self, Self) -> Bool
+
+// Type aliases
+
+// Traits
