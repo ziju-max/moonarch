@@ -44,9 +44,9 @@ noreply 地址所需的 ID 与创建日期；未读取邮箱列表、令牌或�
 | `moon check --target native --deny-warn` | 通过，退出码 0 |
 | `moon info --target native` | 通过，退出码 0；复核生成的公开接口后隐藏了测试专用日期/注入函数 |
 | `moon build --target native --deny-warn` | 通过，退出码 0；依赖 C 文件仍有 MSVC `EINVAL` 宏重定义 warning |
-| `moon test --target native --deny-warn` | 61 项通过，0 失败；覆盖无匹配规则组的稳定警告、报告可见性、warning 不提升退出码，以及失败输入不覆盖 baseline、baseline 写入失败分类 |
+| `moon test --target native --deny-warn` | 62 项通过，0 失败；覆盖无匹配规则组的稳定警告、报告可见性、warning 不提升退出码，Moon tree 子进程无效 UTF-8 拒绝，以及失败输入不覆盖 baseline、baseline 写入失败分类 |
 | `scripts/verify-demo.ps1` | 通过，退出码 0；关闭 CLI 子进程 stdout 管道验证校验提示写入失败返回 3；含恶意换行字段名的配置错误保持单行；baseline 输出目录缺失时返回 3 且不创建目录；包含策略/配置/图错误预期退出码、baseline 一致性、报告与 live 模式，并单独检查/构建 live 示例模块 |
-| `scripts/audit-source.ps1` | 43 个 MoonBit 源文件；生产非空非行注释物理行 3,044；测试 1,411；总计 4,455，独立排除任意层级 `_build`/`.mooncakes` |
+| `scripts/audit-source.ps1` | 43 个 MoonBit 源文件；生产非空非行注释物理行 3,044；测试 1,422；总计 4,466，独立排除任意层级 `_build`/`.mooncakes` |
 | 文本文件空白检查 | 通过，无行尾空白；`git diff --check` 退出码 0 |
 
 源码审计计数是物理源文件行数，包含测试中的多行 fixture 字符串；它不是代码复杂度、独立逻辑语句数
@@ -54,9 +54,9 @@ noreply 地址所需的 ID 与创建日期；未读取邮箱列表、令牌或�
 
 ## Git 与远程状态
 
-- 本地分支为 `main`；本地历史包含完整 MVP 快照 `435ee22`、验收记录 `c222d6d`、stdout 错误处理、错误文本安全、Moon tree 子进程结果分类、规则组无匹配诊断及 baseline 输出失败保护测试。仓库级作者配置为 `ziju-max` 和当前账号 ID 型 noreply 邮箱；没有配置 remote。
+- 本地分支为 `main`；本地历史包含完整 MVP 快照 `435ee22`、验收记录 `c222d6d`、stdout 错误处理、错误文本安全、Moon tree 子进程结果分类、规则组无匹配诊断、baseline 输出失败保护测试和无效 UTF-8 输出拒绝测试。仓库级作者配置为 `ziju-max` 和当前账号 ID 型 noreply 邮箱；没有配置 remote。
 - 远程默认分支因此无法核实；本次没有读取远程仓库内容、提交历史、凭据或令牌。
-- 目前只有 7 次真实本地提交，用户要求的 10 次以上实质提交仍未达到；后续只随真实的功能或质量改动增加提交，不做空提交或拆分伪造历史。
+- 目前只有 7 次真实本地提交；本次测试变更尚未提交，用户要求的 10 次以上实质提交仍未达到。后续只随真实的功能或质量改动增加提交，不做空提交或拆分伪造历史。
 - workflow 文件已加入 `.github/workflows/ci.yml` 并按本地命令审阅；GitHub 托管 runner 上的 CI 尚未执行。
 
 ## 待处理与赛事边界

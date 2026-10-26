@@ -151,6 +151,19 @@ test "zero-status Moon tree output still rejects malformed JSON" {
 }
 
 ///|
+test "zero-status Moon tree output rejects invalid UTF-8" {
+  let stdout = Bytes::from_array([b'\xFF'])
+  let stderr = ""
+  try {
+    parse_moon_tree_process_result(0, stdout, stderr) |> ignore
+    fail("invalid UTF-8 child output must not become an empty graph")
+  } catch {
+    GraphInput(message) => assert_true(message.contains("not UTF-8"))
+    _ => fail("invalid UTF-8 child output must remain a graph input error")
+  }
+}
+
+///|
 async test "configuration read and decode failures stay distinct from graph errors" {
   let path = "_build/moonarch_invalid_config_test.json"
   defer @fs.remove(path)
