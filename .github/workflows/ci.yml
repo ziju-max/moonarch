@@ -37,6 +37,17 @@ jobs:
           test "$status" -eq 1
       - name: Verify baselined offline report
         run: moon run cmd/main --target native -- check --config examples/offline/moonarch-baselined.json --graph examples/offline/graph.json --format json --output _build/ci-report.json
+      - name: Verify report output failures
+        shell: bash
+        run: |
+          output_dir=_build/moonarch-report-parent
+          test ! -e "$output_dir"
+          set +e
+          moon run cmd/main --target native -- check --config examples/offline/moonarch.json --graph examples/offline/graph.json --format json --output "$output_dir/report.json"
+          status=$?
+          set -e
+          test "$status" -eq 3
+          test ! -e "$output_dir"
       - name: Verify live Moon tree adapter
         run: moon run cmd/main --target native -- check --config examples/workspace/moonarch.json --workspace examples/workspace --format markdown --output _build/live-report.md
       - name: Check the live demo module

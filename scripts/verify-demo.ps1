@@ -68,6 +68,12 @@ try {
   if ($LASTEXITCODE -ne 3) { throw "expected baseline output error to return 3, got $LASTEXITCODE" }
   if (Test-Path -LiteralPath $missingOutputDirectory) { throw 'baseline output failure unexpectedly created its missing parent directory' }
 
+  $missingReportDirectory = '_build/moonarch-report-parent-' + [guid]::NewGuid().ToString('N')
+  $missingReportPath = Join-Path $missingReportDirectory 'report.json'
+  moon run cmd/main --target native -- check --config examples/offline/moonarch.json --graph examples/offline/graph.json --format json --output $missingReportPath
+  if ($LASTEXITCODE -ne 3) { throw "expected report output error to return 3, got $LASTEXITCODE" }
+  if (Test-Path -LiteralPath $missingReportDirectory) { throw 'report output failure unexpectedly created its missing parent directory' }
+
   moon run cmd/main --target native -- check --config examples/offline/moonarch.json --graph examples/offline/graph.json
   if ($LASTEXITCODE -ne 1) { throw "expected new findings to return 1, got $LASTEXITCODE" }
 
