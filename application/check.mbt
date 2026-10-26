@@ -153,20 +153,29 @@ async fn load_graph(
             "could not start `" + moon_executable + " tree --package --json`",
           )
       }
-      if exit_code != 0 {
-        raise ApplicationError::ProcessFailure(
-          "moon tree failed with exit code " +
-          exit_code.to_string() +
-          stderr_excerpt(safe_data_text(stderr)),
-        )
-      }
-      let text = stdout.text() catch {
-        _ => raise ApplicationError::GraphInput("moon tree output is not UTF-8")
-      }
-      @moon_tree.parse_moon_tree_json(text) catch {
-        error => raise ApplicationError::GraphInput(moon_tree_error_text(error))
-      }
+      parse_moon_tree_process_result(exit_code, stdout, stderr)
     }
+  }
+}
+
+///|
+fn parse_moon_tree_process_result(
+  exit_code : Int32,
+  stdout : &@io.Data,
+  stderr : &@io.Data,
+) -> @graph.Graph raise ApplicationError {
+  if exit_code != 0 {
+    raise ApplicationError::ProcessFailure(
+      "moon tree failed with exit code " +
+      exit_code.to_string() +
+      stderr_excerpt(safe_data_text(stderr)),
+    )
+  }
+  let text = stdout.text() catch {
+    _ => raise ApplicationError::GraphInput("moon tree output is not UTF-8")
+  }
+  @moon_tree.parse_moon_tree_json(text) catch {
+    error => raise ApplicationError::GraphInput(moon_tree_error_text(error))
   }
 }
 

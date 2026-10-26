@@ -116,6 +116,36 @@ test "child process stderr excerpts have a fixed upper bound" {
 }
 
 ///|
+test "non-zero Moon tree status takes precedence over valid stdout and caps stderr" {
+  let stdout = "{\"version\":3,\"status\":\"success\",\"nodes\":[],\"edges\":[]}"
+  let stderr = String::make(1200, 'x')
+  try {
+    parse_moon_tree_process_result(7, stdout, stderr) |> ignore
+    fail("a failed Moon tree process must not become a graph")
+  } catch {
+    ProcessFailure(message) => {
+      assert_true(message.contains("exit code 7"))
+      assert_true(message.length() <= 1100)
+      assert_true(message.has_suffix("…"))
+    }
+    _ => fail("a non-zero Moon tree status must remain a process failure")
+  }
+}
+
+///|
+test "zero-status Moon tree output still rejects malformed JSON" {
+  let stdout = "{not-json"
+  let stderr = ""
+  try {
+    parse_moon_tree_process_result(0, stdout, stderr) |> ignore
+    fail("malformed child output must not become an empty graph")
+  } catch {
+    GraphInput(message) => assert_true(message.contains("not valid JSON"))
+    _ => fail("malformed child output must remain a graph input error")
+  }
+}
+
+///|
 async test "configuration read and decode failures stay distinct from graph errors" {
   let path = "_build/moonarch_invalid_config_test.json"
   defer @fs.remove(path)
