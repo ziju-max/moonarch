@@ -1,8 +1,7 @@
 # MoonArch 本地自查记录
 
 检查日期：2026-10-27。本文记录 `moonarch-clean` 的本地工程验收及用户授权后的 GitHub 发布核验。
-推送前只核验当前 GitHub CLI 登录名为 `ziju-max`；未读取其他账号、凭据、令牌或全局 Git 身份。
-这是工程自查记录，不是赛事审核结论。
+推送使用的 GitHub CLI 当前登录名已核验为 `ziju-max`。另一个 GitHub 连接器的身份核验结果不匹配后即停止使用，未查询其资料或仓库；未读取凭据、令牌或全局 Git 身份，也未切换账号。这是工程自查记录，不是赛事审核结论。
 
 ## 结构与来源
 
@@ -53,11 +52,11 @@
 
 ## Git 与远程状态
 
-- 本地分支为 `main`，跟踪 `origin/main`；GitHub 仓库为公开的 [ziju-max/moonarch](https://github.com/ziju-max/moonarch)，远程默认分支为 `main`。最新推送提交为 `1a2caacd1d2a1d58fa29c2137449ab133efd96e2`，与远程 `main` 一致。
-- 最新提交含 12 次真实提交，作者唯一为 `ziju-max <186978669+ziju-max@users.noreply.github.com>`。本次验收文档更新提交后将为 13 次；每次提交对应真实功能、测试或文档工作。
-- 首次 GitHub Actions 运行 `40439877183` 在依赖解析阶段失败：干净 runner 尚未更新 MoonBit registry 索引。workflow 加入 `moon update` 后，运行 `40440161275` 于 36 秒完成并通过，覆盖格式、check/build/test、离线配置与报告、report 输出失败以及实时 workspace 示例。运行链接：[MoonArch CI](https://github.com/ziju-max/moonarch/actions/runs/40440161275)。
+- 本地分支为 `main`，跟踪 `origin/main`；GitHub 仓库为公开的 [ziju-max/moonarch](https://github.com/ziju-max/moonarch)，远程默认分支为 `main`。每次推送后均核验本地 HEAD 与远程 `main` 的 SHA 一致。
+- 本次验收文档更新提交后，本地历史将含 14 次真实提交，作者唯一为 `ziju-max <186978669+ziju-max@users.noreply.github.com>`；每次提交对应真实功能、测试或文档工作。
+- 首次 GitHub Actions 运行 `40439877183` 在依赖解析阶段失败：干净 runner 尚未更新 MoonBit registry 索引。workflow 加入 `moon update` 后，运行 `40440161275` 于 36 秒完成并通过；随后文档提交对应的运行 `40440294755` 也于 36 秒通过，覆盖格式、check/build/test、离线配置与报告、report 输出失败以及实时 workspace 示例。运行链接：[MoonArch CI 40440294755](https://github.com/ziju-max/moonarch/actions/runs/40440294755)。
 - 受限本机直接运行 `moon update` 时，registry 更新目录锁返回 access denied；这不影响本地缓存下的完整验收。GitHub runner 上同一 workflow 命令已实际通过。
-- 远程检查只针对 `ziju-max/moonarch`；没有查询其他账号或仓库。申报书在仓库目录外，没有包含在推送内容中。
+- 远程仓库检查只针对 `ziju-max/moonarch`，没有查询其他仓库或其他连接器的账号资料。申报书在仓库目录外，没有包含在推送内容中。
 
 ## 待处理与赛事边界
 
