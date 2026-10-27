@@ -53,9 +53,10 @@
 
 ## Git 与远程状态
 
-- 本地分支为 `main`，跟踪 `origin/main`；GitHub 仓库为公开的 [ziju-max/moonarch](https://github.com/ziju-max/moonarch)，远程默认分支为 `main`。已推送提交 `39ce0f57af1b24856b8caf529586706a0f6aa668`，与推送前本地 HEAD 一致。
-- 当前 11 次已推送的真实提交作者唯一为 `ziju-max <186978669+ziju-max@users.noreply.github.com>`。本地又增加了一项经本地检查的 CI 修复，提交后历史为 12 次；每次提交对应真实功能、测试或文档工作。
-- 首次 GitHub Actions 运行 `40439877183` 在依赖解析阶段失败：干净 runner 尚未更新 MoonBit registry 索引。workflow 已加入 `moon update` 步骤；修复提交推送后将重新核验 CI。
+- 本地分支为 `main`，跟踪 `origin/main`；GitHub 仓库为公开的 [ziju-max/moonarch](https://github.com/ziju-max/moonarch)，远程默认分支为 `main`。最新推送提交为 `1a2caacd1d2a1d58fa29c2137449ab133efd96e2`，与远程 `main` 一致。
+- 最新提交含 12 次真实提交，作者唯一为 `ziju-max <186978669+ziju-max@users.noreply.github.com>`。本次验收文档更新提交后将为 13 次；每次提交对应真实功能、测试或文档工作。
+- 首次 GitHub Actions 运行 `40439877183` 在依赖解析阶段失败：干净 runner 尚未更新 MoonBit registry 索引。workflow 加入 `moon update` 后，运行 `40440161275` 于 36 秒完成并通过，覆盖格式、check/build/test、离线配置与报告、report 输出失败以及实时 workspace 示例。运行链接：[MoonArch CI](https://github.com/ziju-max/moonarch/actions/runs/40440161275)。
+- 受限本机直接运行 `moon update` 时，registry 更新目录锁返回 access denied；这不影响本地缓存下的完整验收。GitHub runner 上同一 workflow 命令已实际通过。
 - 远程检查只针对 `ziju-max/moonarch`；没有查询其他账号或仓库。申报书在仓库目录外，没有包含在推送内容中。
 
 ## 待处理与赛事边界
