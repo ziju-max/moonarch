@@ -1,9 +1,8 @@
 # MoonArch 本地自查记录
 
-检查日期：2026-10-27。范围为当前 `moonarch-clean` 本地目录和本机工具链；未访问 GitHub
-仓库、远程分支或远程 CI。经用户授权，只通过当前 GitHub CLI 身份核验 `ziju-max` 并读取生成
-noreply 地址所需的 ID 与创建日期；未读取邮箱列表、令牌或全局 Git 身份。这是工程自查记录，
-不是赛事审核结论。
+检查日期：2026-10-27。本文记录 `moonarch-clean` 的本地工程验收及用户授权后的 GitHub 发布核验。
+推送前只核验当前 GitHub CLI 登录名为 `ziju-max`；未读取其他账号、凭据、令牌或全局 Git 身份。
+这是工程自查记录，不是赛事审核结论。
 
 ## 结构与来源
 
@@ -54,16 +53,15 @@ noreply 地址所需的 ID 与创建日期；未读取邮箱列表、令牌或�
 
 ## Git 与远程状态
 
-- 本地分支为 `main`；本地历史包含完整 MVP 快照 `435ee22`、验收记录 `c222d6d`、stdout 错误处理、错误文本安全、Moon tree 子进程结果分类、规则组无匹配诊断、baseline 与 report 输出失败保护、无效 UTF-8 输出拒绝、包路径校验和更精确的离线图错误。仓库级作者配置为 `ziju-max` 和当前账号 ID 型 noreply 邮箱；没有配置 remote。
-- 远程默认分支因此无法核实；本次没有读取远程仓库内容、提交历史、凭据或令牌。
-- 本次验收记录更新后，本地历史将包含 11 次真实提交，达到用户要求的 10 次以上；提交都对应真实、可审阅的功能、测试或文档里程碑，没有空提交或拆分伪造历史。
-- workflow 文件已加入 `.github/workflows/ci.yml` 并按本地命令审阅；GitHub 托管 runner 上的 CI 尚未执行。
+- 本地分支为 `main`，跟踪 `origin/main`；GitHub 仓库为公开的 [ziju-max/moonarch](https://github.com/ziju-max/moonarch)，远程默认分支为 `main`。已推送提交 `39ce0f57af1b24856b8caf529586706a0f6aa668`，与推送前本地 HEAD 一致。
+- 当前 11 次已推送的真实提交作者唯一为 `ziju-max <186978669+ziju-max@users.noreply.github.com>`。本地又增加了一项经本地检查的 CI 修复，提交后历史为 12 次；每次提交对应真实功能、测试或文档工作。
+- 首次 GitHub Actions 运行 `40439877183` 在依赖解析阶段失败：干净 runner 尚未更新 MoonBit registry 索引。workflow 已加入 `moon update` 步骤；修复提交推送后将重新核验 CI。
+- 远程检查只针对 `ziju-max/moonarch`；没有查询其他账号或仓库。申报书在仓库目录外，没有包含在推送内容中。
 
 ## 待处理与赛事边界
 
-- 这是本地 MVP 自查，不代表可立即完成远程发布或赛事验收。继续本地开发可沿用已核验的仓库级作者身份；
-  任何远程操作仍需用户明确指示。
-- Mooncakes 发布状态与远程默认分支均未检查。是否为 2026 年 10 月黑客松硬性要求，应以该期官方说明为准，
+- 本地 MVP 和首次远程发布已完成，不代表赛事审核通过。继续远程操作仍须按用户明确指示执行。
+- Mooncakes 发布状态尚未检查。是否为 2026 年 10 月黑客松硬性要求，应以该期官方说明为准，
   不套用其他赛事/往期 hackathon 规则。
 - [2026 年 10 月黑客松官网](https://moonbitlang.github.io/Hackathon2026/) 与
   [正式章程](https://bxup9uklfcb.feishu.cn/wiki/Dx4Bwd6D1i3GfHkajQCcF7SznEd) 是赛事规则复核入口。

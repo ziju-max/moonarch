@@ -17,6 +17,8 @@ jobs:
         with:
           version: latest
           setup-core: true
+      - name: Update MoonBit package registry
+        run: moon update
       - name: Format
         run: moon fmt --check
       - name: Check
